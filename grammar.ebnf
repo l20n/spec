@@ -1,4 +1,4 @@
-body                 ::= (__ entry NL)* (__ entry)? EOF;
+body                 ::= (entry NL)* (entry)? EOF;
 entry                ::= comment
                       | section
                       | message
@@ -18,13 +18,9 @@ member-base          ::= '[' keyword ']' __ pattern NL;
 default-member       ::= '*' member-base
 nondefault-member    ::= member-base
 
-member-list          ::= (__ nondefault-member)* (__ default-member) (__ nondefault-member)*
-                      |  (__ nondefault-member)+
+member-list          ::= NL (__ nondefault-member)* (__ default-member) (__ nondefault-member)*
+                      |  NL (__ nondefault-member)+
                       ;
-
-message              ::= identifier __ '=' __ (value | member-list);
-value                ::= pattern (NL member-list)?;
-
 pattern              ::= unquoted-pattern
                       |  quoted-pattern
                       ;
@@ -46,12 +42,10 @@ expression           ::= quoted-pattern
                       |  call-expression
                       |  member-expression
                       ;
-select-expression    ::= expression __ ' ->' __ NL member-list;
-
+select-expression    ::= expression __ ' ->' __ member-list;
 call-expression      ::= builtin '(' __ arglist? __ ')';
 arglist              ::= argument (__ ',' __ arglist)?;
 argument             ::= expression
                       |  keyword-argument;
 keyword-argument     ::= identifier __ '=' __ quoted-pattern;
-
 member-expression    ::= identifier '[' keyword ']';
