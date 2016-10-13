@@ -5,22 +5,24 @@ entry                ::= comment
                       ;
 
 comment              ::= '#' .*;
-section              ::= '[[' keyword ']]';
+section              ::= '[[' __ keyword __ ']]';
+
 __                   ::= [ \t]*;
 NL                   ::= [\r\n]+;
 
 identifier           ::= [a-zA-Z_.?-] ([a-zA-Z0-9_.?-])*;
 variable             ::= '$' identifier;
-keyword              ::= [^=|#{}\[\]()]+;
+keyword              ::= [a-zA-Z_.?-] ([a-zA-Z0-9_.?- ]* [a-zA-Z0-9_.?-])?;
 builtin              ::= [A-Z_.?-]+;
 number               ::= [0-9]+ ('.' [0-9]+)?;
-member-base          ::= '[' keyword ']' __ pattern NL;
-default-member       ::= '*' member-base
-nondefault-member    ::= member-base
 
-member-list          ::= NL (__ nondefault-member)* (__ default-member) (__ nondefault-member)*
-                      |  NL (__ nondefault-member)+
-                      ;
+member-key           ::= number | (identifier '/')? keyword;
+member               ::= '[' member-key ']' __ pattern NL;
+member-default       ::= '*' member;
+variants-list        ::= NL (__ member)*  __ default-member (__ member)*;
+traits-list          ::= NL (__ member)+;
+
+message              ::= identifier __ '=' __ (pattern | pattern member-list | member-list);
 pattern              ::= unquoted-pattern
                       |  quoted-pattern
                       ;
