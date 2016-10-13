@@ -18,9 +18,10 @@ number               ::= [0-9]+ ('.' [0-9]+)?;
 
 member-key           ::= number | (identifier '/')? keyword;
 member               ::= '[' member-key ']' __ pattern NL;
-member-default       ::= '*' member;
-variants-list        ::= NL (__ member)*  __ default-member (__ member)*;
-traits-list          ::= NL (__ member)+;
+default-member       ::= '*' member;
+default-list         ::= NL (__ member)* __ default-member (__ member)*;
+variants-list        ::= default-list;
+traits-list          ::= default-list | NL (__ member)+;
 
 message              ::= identifier __ '=' __ (pattern | pattern member-list | member-list);
 pattern              ::= unquoted-pattern
